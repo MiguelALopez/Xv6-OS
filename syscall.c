@@ -7,6 +7,8 @@
 #include "x86.h"
 #include "syscall.h"
 
+char *setSyscalls;
+
 // User code makes a system call with INT T_SYSCALL.
 // System call number in %eax.
 // Arguments on the stack, from the user call to the C
@@ -126,6 +128,35 @@ static int (*syscalls[])(void) = {
 };
 
 void
+showSyscalls(int num){
+  switch(num){
+    case 1: cprintf(" llamada fork(void)\n");break;
+    case 2: cprintf(" llamada exit(void)\n");break;
+    case 3: cprintf(" llamada wait(void)\n");break;
+    case 4: cprintf(" llamada pipe(int*)\n");break;
+    case 5: cprintf(" llamada read(int, void*, int)\n");break;
+    case 6: cprintf(" llamada kill(int)\n");break;
+    case 7: cprintf(" llamada exec(char*, char**)\n");break;
+    case 8: cprintf(" llamada fstat(int fd, struct stat*)\n");break;
+    case 9: cprintf(" llamada chdir(char*)\n");break;
+    case 10: cprintf(" llamada dup(int)\n");break;
+    case 11: cprintf(" llamada getpid(void)\n");break;
+    case 12: cprintf(" llamada sbrk(int)\n");break;
+    case 13: cprintf(" llamada sleep(int)\n");break;
+    case 14: cprintf(" llamada uptime(void)\n");break;
+    case 15: cprintf(" llamada open(char*, int)\n");break;
+    case 16: cprintf(" llamada write(int, void*, int)\n");break;
+    case 17: cprintf(" llamada mknod(char*, short, short)\n");break;
+    case 18: cprintf(" llamada unlink(char*)\n");break;
+    case 19: cprintf(" llamada link(char*, char*)\n");break;
+    case 20: cprintf(" llamada mkdir(char*)\n");break;
+    case 21: cprintf(" llamada close(int)\n");break;
+    case 22: cprintf(" llamada date(struct rtcdate *r)\n");break;
+    default: cprintf("%d %s: unknown sys call %d\n",proc->pid, proc->name, num);break;
+  }
+}
+
+void
 syscall(void)
 {
   int num;
@@ -133,9 +164,11 @@ syscall(void)
   num = proc->tf->eax;
   if(num > 0 && num < NELEM(syscalls) && syscalls[num]) {
     proc->tf->eax = syscalls[num]();
+    showSyscalls(num);
   } else {
     cprintf("%d %s: unknown sys call %d\n",
             proc->pid, proc->name, num);
     proc->tf->eax = -1;
   }
 }
+
