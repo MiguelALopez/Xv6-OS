@@ -7,7 +7,7 @@
 #include "x86.h"
 #include "syscall.h"
 
-int numsyscalls[22];
+int numsyscalls[23];
 
 // User code makes a system call with INT T_SYSCALL.
 // System call number in %eax.
@@ -101,60 +101,182 @@ extern int sys_wait(void);
 extern int sys_write(void);
 extern int sys_uptime(void);
 extern int sys_date(void);
+extern int sys_numsyscalls(void);
 
 static int (*syscalls[])(void) = {
-[SYS_fork]    sys_fork,
-[SYS_exit]    sys_exit,
-[SYS_wait]    sys_wait,
-[SYS_pipe]    sys_pipe,
-[SYS_read]    sys_read,
-[SYS_kill]    sys_kill,
-[SYS_exec]    sys_exec,
-[SYS_fstat]   sys_fstat,
-[SYS_chdir]   sys_chdir,
-[SYS_dup]     sys_dup,
-[SYS_getpid]  sys_getpid,
-[SYS_sbrk]    sys_sbrk,
-[SYS_sleep]   sys_sleep,
-[SYS_uptime]  sys_uptime,
-[SYS_open]    sys_open,
-[SYS_write]   sys_write,
-[SYS_mknod]   sys_mknod,
-[SYS_unlink]  sys_unlink,
-[SYS_link]    sys_link,
-[SYS_mkdir]   sys_mkdir,
-[SYS_close]   sys_close,
-[SYS_date]    sys_date,
+[SYS_fork]        sys_fork,
+[SYS_exit]        sys_exit,
+[SYS_wait]        sys_wait,
+[SYS_pipe]        sys_pipe,
+[SYS_read]        sys_read,
+[SYS_kill]        sys_kill,
+[SYS_exec]        sys_exec,
+[SYS_fstat]       sys_fstat,
+[SYS_chdir]       sys_chdir,
+[SYS_dup]         sys_dup,
+[SYS_getpid]      sys_getpid,
+[SYS_sbrk]        sys_sbrk,
+[SYS_sleep]       sys_sleep,
+[SYS_uptime]      sys_uptime,
+[SYS_open]        sys_open,
+[SYS_write]       sys_write,
+[SYS_mknod]       sys_mknod,
+[SYS_unlink]      sys_unlink,
+[SYS_link]        sys_link,
+[SYS_mkdir]       sys_mkdir,
+[SYS_close]       sys_close,
+[SYS_date]        sys_date,
+[SYS_numsyscalls] sys_numsyscalls,
 };
+char*
+nameSyscalls(int num){
+	char *name;
+	switch(num){
+		case 1: name = "fork"; break;
+		case 2: name = "exit"; break;
+		case 3: name = "wait"; break;
+		case 4: name = "pipe"; break;
+		case 5: name = "read"; break;
+		case 6: name = "kill"; break;
+		case 7: name = "exec"; break;
+		case 8: name = "fstat"; break;
+		case 9: name = "chdir"; break;
+		case 10: name = "dup"; break;
+		case 11: name = "getpid"; break;
+		case 12: name = "sbrk"; break;
+		case 13: name = "sleep"; break;
+		case 14: name = "uptime"; break;
+		case 15: name = "open"; break;
+		case 16: name = "write"; break;
+		case 17: name = "mknod"; break;
+		case 18: name = "unlink"; break;
+		case 19: name = "link"; break;
+		case 20: name = "mkdir"; break;
+		case 21: name = "close"; break;
+		case 22: name = "date"; break;
+		case 23: name = "numsyscalls"; break;
+		
+	}
+	return name;
+}
 void
 showNumSyscalls(int num){
-	cprintf("numero de llamados %d\n",numsyscalls[num+1]);
+	cprintf("numero de llamados de la funcion %s: %d\n",nameSyscalls(num),numsyscalls[num-1]);
 }
 void
 showSyscalls(int num){
   switch(num){
-    case 1:{cprintf(" llamada fork(void)\n"); numsyscalls[num-1]++;}break;
-    case 2:{cprintf(" llamada exit(void)\n"); numsyscalls[num-1]++;}break;
-    case 3:{cprintf(" llamada wait(void)\n"); numsyscalls[num-1]++;}break;
-    case 4:{cprintf(" llamada pipe(int*)\n"); numsyscalls[num-1]++;}break;
-    case 5:{cprintf(" llamada read(int, void*, int)\n"); numsyscalls[num-1]++;}break;
-    case 6:{cprintf(" llamada kill(int)\n"); numsyscalls[num-1]++;}break;
-    case 7:{cprintf(" llamada exec(char*, char**)\n"); numsyscalls[num-1]++;}break;
-    case 8:{cprintf(" llamada fstat(int fd, struct stat*)\n"); numsyscalls[num-1]++;}break;
-    case 9:{cprintf(" llamada chdir(char*)\n"); numsyscalls[num-1]++;}break;
-    case 10:{cprintf(" llamada dup(int)\n"); numsyscalls[num-1]++;}break;
-    case 11:{cprintf(" llamada getpid(void)\n"); numsyscalls[num-1]++;}break;
-    case 12:{cprintf(" llamada sbrk(int)\n"); numsyscalls[num-1]++;}break;
-    case 13:{cprintf(" llamada sleep(int)\n"); numsyscalls[num-1]++;}break;
-    case 14:{cprintf(" llamada uptime(void)\n"); numsyscalls[num-1]++;}break;
-    case 15:{cprintf(" llamada open(char*, int)\n"); numsyscalls[num-1]++;}break;
-    case 16:{cprintf(" llamada write(int, void*, int)\n"); numsyscalls[num-1]++;}break;
-    case 17:{cprintf(" llamada mknod(char*, short, short)\n"); numsyscalls[num-1]++;}break;
-    case 18:{cprintf(" llamada unlink(char*)\n"); numsyscalls[num-1]++;}break;
-    case 19:{cprintf(" llamada link(char*, char*)\n"); numsyscalls[num-1]++;}break;
-    case 20:{cprintf(" llamada mkdir(char*)\n"); numsyscalls[num-1]++;}break;
-    case 21:{cprintf(" llamada close(int)\n"); numsyscalls[num-1]++;}break;
-    case 22:{cprintf(" llamada date(struct rtcdate *r)\n"); numsyscalls[num-1]++;}break;
+    case 1:{
+		cprintf(" llamada %s(void)\n",nameSyscalls(num));
+		numsyscalls[num-1]++;}break;
+    case 2:{
+		cprintf(" llamada exit(void)\n");
+		numsyscalls[num-1]++;}break;
+    case 3:{
+		cprintf(" llamada wait(void)\n");
+		numsyscalls[num-1]++;}break;
+    case 4:{
+		int *a;
+		argptr(0,(void*)(&a),sizeof(*a));
+		cprintf(" llamada pipe(%d)\n",*a);
+		numsyscalls[num-1]++;}break;
+    case 5:{
+		int a;
+		argint(0,&a);
+		int b;
+		argint(2,&b);
+		cprintf(" llamada read(%d, void*, %d)\n",a,b);
+		numsyscalls[num-1]++;}break;
+    case 6:{
+		int a;
+		argint(0,&a);
+		cprintf(" llamada kill( %d )\n",a);
+		numsyscalls[num-1]++;}break;
+    case 7:{
+		char *a;
+		argstr(0,&a);
+		cprintf(" llamada exec(%s, char**)\n",a);
+		numsyscalls[num-1]++;}break;
+    case 8:{
+		int a;
+		argint(0,&a);
+		cprintf(" llamada fstat(%d, struct stat*)\n",a);
+		numsyscalls[num-1]++;}break;
+    case 9:{
+		char *a;
+		argstr(0,&a);
+		cprintf(" llamada chdir(%s)\n",a);
+		numsyscalls[num-1]++;}break;
+    case 10:{
+		int a;
+		argint(0,&a);
+		cprintf(" llamada dup(%d)\n",a);
+		numsyscalls[num-1]++;}break;
+    case 11:{
+		cprintf(" llamada getpid(void)\n");
+		numsyscalls[num-1]++;}break;
+    case 12:{
+		int a;
+		argint(0,&a);
+		cprintf(" llamada sbrk(%d)\n",a);
+		numsyscalls[num-1]++;}break;
+    case 13:{
+		int a;
+		argint(0,&a);
+		cprintf(" llamada sleep(%d)\n",a);
+		numsyscalls[num-1]++;}break;
+    case 14:{
+		cprintf(" llamada uptime(void)\n");
+		numsyscalls[num-1]++;}break;
+    case 15:{
+		char *a;
+		argstr(0,&a);
+		int b;
+		argint(1,&b);
+		cprintf(" llamada open(%s, %d)\n",a,b);
+		numsyscalls[num-1]++;}break;
+    case 16:{
+		int a;
+		argint(0,&a);
+		int b;
+		argint(2,&b);
+		cprintf(" llamada write(%d, void*, %d)\n",a,b);
+		numsyscalls[num-1]++;}break;
+    case 17:{
+		char *a;
+		argstr(0,&a);
+		cprintf(" llamada mknod(%s, short, short)\n",a);
+		numsyscalls[num-1]++;}break;
+    case 18:{
+		char *a;
+		argstr(0,&a);
+		cprintf(" llamada unlink(%s)\n",a);
+		numsyscalls[num-1]++;}break;
+    case 19:{
+		char *a;
+		argstr(0,&a);
+		char *b;
+		argstr(1,&b);
+		cprintf(" llamada link(%s, %s)\n",a,b);
+		numsyscalls[num-1]++;}break;
+    case 20:{
+		char *a;
+		argstr(0,&a);
+		cprintf(" llamada mkdir(%s)\n",a);
+		numsyscalls[num-1]++;}break;
+    case 21:{
+		int a;
+		argint(0,&a);
+		cprintf(" llamada close(%d)\n",a); 
+		numsyscalls[num-1]++;}break;
+    case 22:{
+		cprintf(" llamada date(struct rtcdate *r)\n");
+		numsyscalls[num-1]++;}break;
+    case 23:{
+		int a;
+		argint(0,&a);
+		cprintf(" llamada numsyscalls(%d)\n",a);
+		numsyscalls[num-1]++;}break;
     default: cprintf("%d %s: unknown sys call %d\n",proc->pid, proc->name, num);break;
   }  
 }
@@ -166,8 +288,8 @@ syscall(void)
 
   num = proc->tf->eax;
   if(num > 0 && num < NELEM(syscalls) && syscalls[num]) {
+	showSyscalls(num);
     proc->tf->eax = syscalls[num]();
-    showSyscalls(num);
   } else {
     cprintf("%d %s: unknown sys call %d\n",
             proc->pid, proc->name, num);

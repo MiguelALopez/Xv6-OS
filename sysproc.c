@@ -97,3 +97,12 @@ sys_date(void)
   cmostime(r);
   return 0;
 }
+
+int
+sys_numsyscalls(void)
+{
+	int num;
+	argint(0,&num);
+	showNumSyscalls(num);
+	return 0;
+}
