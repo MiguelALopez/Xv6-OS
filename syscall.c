@@ -7,7 +7,8 @@
 #include "x86.h"
 #include "syscall.h"
 
-int numsyscalls[23];
+//Arreglo encargado de almacenar el numero de veces que se ejecuta un llamado al sistema
+int numsyscalls[23]; 
 
 // User code makes a system call with INT T_SYSCALL.
 // System call number in %eax.
@@ -128,6 +129,7 @@ static int (*syscalls[])(void) = {
 [SYS_date]        sys_date,
 [SYS_numsyscalls] sys_numsyscalls,
 };
+//Metodo encargado de retornar el nombre de una llamada al sistema segun su ID
 char*
 nameSyscalls(int num){
 	char *name;
@@ -159,124 +161,86 @@ nameSyscalls(int num){
 	}
 	return name;
 }
+//Metodo encargado de imprimir el numero de veces ejecutado un llamado al sistema especifico
 void
 showNumSyscalls(int num){
 	cprintf("numero de llamados de la funcion %s: %d\n",nameSyscalls(num),numsyscalls[num-1]);
 }
+//Metodo encargado de imprimir el llamado al sistema con sus respectivos argumentos
 void
 showSyscalls(int num){
   switch(num){
     case 1:{
-		cprintf(" llamada %s(void)\n",nameSyscalls(num));
-		numsyscalls[num-1]++;}break;
+		cprintf(" llamada %s(void)\n",nameSyscalls(num));}break;
     case 2:{
-		cprintf(" llamada exit(void)\n");
-		numsyscalls[num-1]++;}break;
+		cprintf(" llamada %s(void)\n",nameSyscalls(num));}break;
     case 3:{
-		cprintf(" llamada wait(void)\n");
-		numsyscalls[num-1]++;}break;
+		cprintf(" llamada %s(void)\n",nameSyscalls(num));}break;
     case 4:{
-		int *a;
-		argptr(0,(void*)(&a),sizeof(*a));
-		cprintf(" llamada pipe(%d)\n",*a);
-		numsyscalls[num-1]++;}break;
+		int *a;	 argptr(0,(void*)(&a),sizeof(*a));
+		cprintf(" llamada %s(%d)\n",nameSyscalls(num),*a);}break;
     case 5:{
-		int a;
-		argint(0,&a);
-		int b;
-		argint(2,&b);
-		cprintf(" llamada read(%d, void*, %d)\n",a,b);
-		numsyscalls[num-1]++;}break;
+		int a;   argint(0,&a);
+		char *b; argstr(1,&b);
+		int c;   argint(2,&c);
+		cprintf(" llamada %s(%d, %s, %d)\n",nameSyscalls(num),a,b,c);}break;
     case 6:{
-		int a;
-		argint(0,&a);
-		cprintf(" llamada kill( %d )\n",a);
-		numsyscalls[num-1]++;}break;
+		int a;   argint(0,&a);
+		cprintf(" llamada %s(%d)\n",nameSyscalls(num),a);}break;
     case 7:{
-		char *a;
-		argstr(0,&a);
-		cprintf(" llamada exec(%s, char**)\n",a);
-		numsyscalls[num-1]++;}break;
+		char *a; argstr(0,&a);//jojo
+		cprintf(" llamada %s(%s, char**)\n",nameSyscalls(num),a);}break;
     case 8:{
-		int a;
-		argint(0,&a);
-		cprintf(" llamada fstat(%d, struct stat*)\n",a);
-		numsyscalls[num-1]++;}break;
+		int a;   argint(0,&a);
+		cprintf(" llamada %s(%d, struct stat*)\n",nameSyscalls(num),a);}break;
     case 9:{
-		char *a;
-		argstr(0,&a);
-		cprintf(" llamada chdir(%s)\n",a);
-		numsyscalls[num-1]++;}break;
+		char *a; argstr(0,&a);
+		cprintf(" llamada %s(%s)\n",nameSyscalls(num),a);}break;
     case 10:{
-		int a;
-		argint(0,&a);
-		cprintf(" llamada dup(%d)\n",a);
-		numsyscalls[num-1]++;}break;
+		int a;   argint(0,&a);
+		cprintf(" llamada %s(%d)\n",nameSyscalls(num),a);}break;
     case 11:{
-		cprintf(" llamada getpid(void)\n");
-		numsyscalls[num-1]++;}break;
+		cprintf(" llamada %s(void)\n",nameSyscalls(num));}break;
     case 12:{
-		int a;
-		argint(0,&a);
-		cprintf(" llamada sbrk(%d)\n",a);
-		numsyscalls[num-1]++;}break;
+		int a;   argint(0,&a);
+		cprintf(" llamada %s(%d)\n",nameSyscalls(num),a);}break;
     case 13:{
-		int a;
-		argint(0,&a);
-		cprintf(" llamada sleep(%d)\n",a);
-		numsyscalls[num-1]++;}break;
+		int a;   argint(0,&a);
+		cprintf(" llamada %s(%d)\n",nameSyscalls(num),a);}break;
     case 14:{
-		cprintf(" llamada uptime(void)\n");
-		numsyscalls[num-1]++;}break;
+		cprintf(" llamada %s(void)\n",nameSyscalls(num));}break;
     case 15:{
-		char *a;
-		argstr(0,&a);
-		int b;
-		argint(1,&b);
-		cprintf(" llamada open(%s, %d)\n",a,b);
-		numsyscalls[num-1]++;}break;
+		char *a; argstr(0,&a);
+		int b;   argint(1,&b);
+		cprintf(" llamada %s(%s, %d)\n",nameSyscalls(num),a,b);}break;
     case 16:{
-		int a;
-		argint(0,&a);
-		int b;
-		argint(2,&b);
-		cprintf(" llamada write(%d, void*, %d)\n",a,b);
-		numsyscalls[num-1]++;}break;
+		int a;   argint(0,&a);
+		char *b; argstr(1,&b);
+		int c;   argint(2,&c);
+		cprintf(" llamada %s(%d, %s, %d)\n",nameSyscalls(num),a,b,c);}break;
     case 17:{
-		char *a;
-		argstr(0,&a);
-		cprintf(" llamada mknod(%s, short, short)\n",a);
-		numsyscalls[num-1]++;}break;
+		char *a; argstr(0,&a);
+		int b;   argint(1,&b);
+		int c;   argint(2,&c);
+		cprintf(" llamada %s(%s, %d, %d)\n",nameSyscalls(num),a,b,c);}break;
     case 18:{
-		char *a;
-		argstr(0,&a);
-		cprintf(" llamada unlink(%s)\n",a);
-		numsyscalls[num-1]++;}break;
+		char *a; argstr(0,&a);
+		cprintf(" llamada %s(%s)\n",nameSyscalls(num),a);}break;
     case 19:{
-		char *a;
-		argstr(0,&a);
-		char *b;
-		argstr(1,&b);
-		cprintf(" llamada link(%s, %s)\n",a,b);
-		numsyscalls[num-1]++;}break;
+		char *a; argstr(0,&a);
+		char *b; argstr(1,&b);
+		cprintf(" llamada %s(%s, %s)\n",nameSyscalls(num),a,b);}break;
     case 20:{
-		char *a;
-		argstr(0,&a);
-		cprintf(" llamada mkdir(%s)\n",a);
-		numsyscalls[num-1]++;}break;
+		char *a; argstr(0,&a);
+		cprintf(" llamada %s(%s)\n",nameSyscalls(num),a);}break;
     case 21:{
-		int a;
-		argint(0,&a);
-		cprintf(" llamada close(%d)\n",a); 
-		numsyscalls[num-1]++;}break;
+		int a;   argint(0,&a);
+		cprintf(" llamada %s(%d)\n",nameSyscalls(num),a);}break;
     case 22:{
-		cprintf(" llamada date(struct rtcdate *r)\n");
-		numsyscalls[num-1]++;}break;
+		cprintf(" llamada %s(struct rtcdate *r)\n",nameSyscalls(num));}break;
     case 23:{
-		int a;
-		argint(0,&a);
-		cprintf(" llamada numsyscalls(%d)\n",a);
-		numsyscalls[num-1]++;}break;
+		int a;   argint(0,&a);
+		cprintf(" llamada %s(%d)\n",nameSyscalls(num),a);}break;
     default: cprintf("%d %s: unknown sys call %d\n",proc->pid, proc->name, num);break;
   }  
 }
@@ -288,7 +252,8 @@ syscall(void)
 
   num = proc->tf->eax;
   if(num > 0 && num < NELEM(syscalls) && syscalls[num]) {
-	showSyscalls(num);
+    numsyscalls[num-1]++; //Se suma en un arreglo el numero de llamadas al sistema
+    showSyscalls(num); //Se imprime la llamada al sistema
     proc->tf->eax = syscalls[num]();
   } else {
     cprintf("%d %s: unknown sys call %d\n",

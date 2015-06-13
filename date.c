@@ -7,7 +7,8 @@ main(int argc, char *argv[])
 {
   
   struct rtcdate r;
-  if (date(&r)) {
+  if (date(&r)) { //se hace un llamado al sistema date el cual se le pasa la posicion de memoria de la estructura
+				  //en la cual se almacena los valores de la fecha 
     printf(2, "date failed\n");
     exit();
   }

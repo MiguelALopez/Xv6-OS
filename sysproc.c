@@ -88,21 +88,21 @@ sys_uptime(void)
   release(&tickslock);
   return xticks;
 }
-
+//definicion de la llamada al sistema date
 int
 sys_date(void)
 {
-  struct rtcdate *r;
-  argptr(0, (void*)(&r), sizeof(*r));
-  cmostime(r);
+  struct rtcdate *r; //se crea un puntero a una estructura de tipo rtcdate
+  argptr(0, (void*)(&r), sizeof(*r)); //se inicializa la estructura con la direccion de memoria de el parametro ingresado al llamado al sistema
+  cmostime(r); //se hace uso de la funcion cmostime para obtener la hora de el sistema
   return 0;
 }
-
+//definicion de la llamada al sistema numsyscalls
 int
 sys_numsyscalls(void)
 {
 	int num;
-	argint(0,&num);
-	showNumSyscalls(num);
+	argint(0,&num); //obtengo el argumento de entrada de la llamada al sistema en forma de entero 
+	showNumSyscalls(num);//hago uso de la funcion showNumSyscalls para imprimir el numero de veces que se a ejecutado un llamado al sistema
 	return 0;
 }

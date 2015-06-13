@@ -6,21 +6,20 @@ int
 main(int argc, char *argv[])
 {
  int nsyscall = -1;
- if (argc == 2) {
-  nsyscall = atoi(argv[1]);
+ if (argc == 2) {// se ferifica si hay mas de un argumento que acompaña a la funcion
+  nsyscall = atoi(argv[1]);//combertimos el argumento que se le pasa a entero
  }
  if (nsyscall == -1) {
-	 //~ printf(2,"ola\n");
+	 /*si no hay parametros de entrada se imprimen el numero de veces 
+	  * ejecutado de cada llamado al sistema*/
 	 int i;
 	 for(i = 1; i <= 23; i++){
-		 numsyscalls(i);
+		 numsyscalls(i);//se hace uso del llamado al sistema el cual se le pasan todos los ID de los syscalls
 	 }
-  // mostrar todas las llamadas al sistema
-  // con su correspondiente numero de invocaciones
  } else {
-	 //~ printf(2, "k ace\n");
-  // mostrar la llamada al sistema dada en nsyscall
-  // con su correspondiente numero de invocaciones
+	 /*si hay un argumento se hace uso del llamado al sistema para que 
+	  * retorne el numero de veces que este se a ejecutado*/
+	 numsyscalls(nsyscall);
  }
  exit();
 }
